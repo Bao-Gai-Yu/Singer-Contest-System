@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="资源文件\Data">
+      <UniqueIdentifier>{22027962-bbab-4450-acc6-036aab7a245a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\Data\SingerLists">
+      <UniqueIdentifier>{aca83d16-ce37-4efe-83a7-71a1edd6bdbe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -44,5 +50,13 @@
     <ClInclude Include="myList.h">
       <Filter>头文件</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\x64\Release\Data\contestData.dat">
+      <Filter>资源文件\Data</Filter>
+    </None>
+    <None Include="..\x64\Release\Data\SingerLists\工地好声音.dat">
+      <Filter>资源文件\Data\SingerLists</Filter>
+    </None>
   </ItemGroup>
 </Project>

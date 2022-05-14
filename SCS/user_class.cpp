@@ -5,6 +5,38 @@
 
 basic::basic(){}
 
+void mySort(myList<singer>& sL, int singerCnt, int sortChoice, int isGreater)
+{
+	for (int i = 1;i < singerCnt;++i)
+	{
+		int k = i;
+		for (int j = i + 1;j <= singerCnt;++j)
+		{
+			bool flag = false;
+			if (isGreater)
+			{
+				if ((*sL.getNode(k))[sortChoice] > (*sL.getNode(j))[sortChoice])
+				{
+					flag = true;
+				}
+			}
+			else
+			{
+				if ((*sL.getNode(k))[sortChoice] < (*sL.getNode(j))[sortChoice])
+				{
+					flag = true;
+				}
+			}
+			if (flag)
+				k = j;
+		}
+		if (k != i)
+		{
+			sL.swapNodes(i, k);
+		}
+	}
+}
+
 void basic::showSingers(contest* c)//—°‘Ò≈≈–Ú∑Ω Ω£¨ ‰≥ˆ∂‘“ª≥°±»»¸≈≈–Ú∫Ûµƒ∏Ë ÷¡–±Ì
 {
 	system("cls");
@@ -12,10 +44,11 @@ void basic::showSingers(contest* c)//—°‘Ò≈≈–Ú∑Ω Ω£¨ ‰≥ˆ∂‘“ª≥°±»»¸≈≈–Ú∫Ûµƒ∏Ë ÷¡–±
 	cout << " 1£∫∆¿ŒØ1¥Ú∑÷\t 2£∫∆¿ŒØ2¥Ú∑÷\t 3£∫∆¿ŒØ3¥Ú∑÷\t 4£∫∆¿ŒØ4¥Ú∑÷\t 5£∫∆¿ŒØ5¥Ú∑÷" << endl;
 	cout << " 6£∫∆¿ŒØ6¥Ú∑÷\t 7£∫∆¿ŒØ7¥Ú∑÷\t 8£∫∆¿ŒØ8¥Ú∑÷\t 9£∫∆¿ŒØ9¥Ú∑÷\t10£∫∆¿ŒØ10¥Ú∑÷" << endl;
 	cout << "11£∫∆¿ŒØ◊Ó∏ﬂ∑÷\t12£∫∆¿ŒØ◊ÓµÕ∑÷\t13£∫◊‹µ√∑÷\t14£∫∆Ωæ˘µ√∑÷\t15£∫π€÷⁄Õ∂∆± ˝" << endl;
+	cout << "16£∫◊€∫œµ√∑÷" << endl;
 	int sortChoice,isGreater;
 	cout << "«Î ‰»Îƒ˙µƒ—°‘Ò£∫";
 	cin >> sortChoice;
-	while (sortChoice < 1 || sortChoice>15)
+	while (sortChoice < 1 || sortChoice>16)
 	{
 		cout << " ‰»Î¥ÌŒÛ£¨«Î÷ÿ–¬ ‰»Î£∫";
 		cin >> sortChoice;
@@ -29,34 +62,7 @@ void basic::showSingers(contest* c)//—°‘Ò≈≈–Ú∑Ω Ω£¨ ‰≥ˆ∂‘“ª≥°±»»¸≈≈–Ú∫Ûµƒ∏Ë ÷¡–±
 	}
 	myList<singer>& sL = c->contestantList;
 	int singerCnt = c->getContestantCount();
-	for (int i = 1;i < singerCnt;++i)
-	{
-		int k = i;
-		for (int j = i + 1;j <= singerCnt;++j)
-		{
-			bool flag = false;
-			if (isGreater)
-			{
-				if ((sL.getNode(k))->getScore(sortChoice) > (sL.getNode(j))->getScore(sortChoice))
-				{
-					flag = true;
-				}
-			}
-			else
-			{
-				if ((sL.getNode(k))->getScore(sortChoice) < (sL.getNode(j))->getScore(sortChoice))
-				{
-					flag = true;
-				}
-			}
-			if (flag)
-				k = j;
-		}
-		if (k != i)
-		{
-			sL.swapNodes(i, k);
-		}
-	}
+	mySort(sL, singerCnt, sortChoice, isGreater);
 	system("cls");
 	sL.printList();
 	cout << "≈≈–Ú“—ÕÍ≥…£¨Ω·π˚‘⁄…œ∑Ω" << endl;
@@ -122,13 +128,28 @@ void user::voteSinger(int contestIndex,singer* vSinger)
 		cout << "“ª∂®“™’˝≥£ÕÀ≥ˆ£¨Õ∂∆±≤≈ª·±£¥Ê≈∂~" << endl<<endl;
 		voted[contestIndex] = true;
 		vSinger->setVotes(vSinger->getVotes() + 1);
+		vSinger->countScores();
+	}
+	return;
+}
+
+void checkPromoted(myList<singer>& sL,int size)
+{
+	mySort(sL, size, 16, 0);//∞¥’’◊€∫œ≥…º®(16)Ωµ–Ú(0)≈≈–Ú°£
+	for (int i = 1;i <= size / 2;i++)
+	{
+		sL.getNode(i)->setPromoted(1);
+	}
+	for (int i = size / 2 + 1;i <= size;i++)
+	{
+		sL.getNode(i)->setPromoted(0);
 	}
 	return;
 }
 
 void admin::addContest(myList<contest>&c, int& contestCount)
 {
-	cout << "«Î ‰»Î–¬±»»¸µƒ√˚≥∆£∫";
+	/*cout << "«Î ‰»Î–¬±»»¸µƒ√˚≥∆£∫";
 	string newName;
 	cin >> newName;
 	cout << "«Î ‰»Î–¬±»»¸µƒ≤Œ»¸»À ˝£∫";
@@ -143,15 +164,71 @@ void admin::addContest(myList<contest>&c, int& contestCount)
 			return;
 		}
 	}
-	contest* newC = new contest(newName,newCount);
+	contest* newC = new contest(newName,newCount,0);
 	for (int i = 0;i < newCount;i++)
 	{
 		singer* tmp = new singer;
 		newC->contestantList.addNode(*tmp);
 	}
 	c.addNode(*newC);
-	contestCount++;
+	contestCount++;*/
 	system("cls");
+	c.printList();
+	cout << "«Î—°‘Ò“ª∏ˆΩ¯––÷–µƒ±»»¸Ω¯»Îœ¬“ªΩ◊∂Œ£∫";
+	int selectKey;
+	cin >> selectKey;
+	while (selectKey < 1 || selectKey > contestCount)
+	{
+		cout << " ‰»Î¥ÌŒÛ£¨«Î÷ÿ–¬ ‰»Î£∫";
+		cin >> selectKey;
+	}
+	contest* targetC = c.getNode(selectKey);
+	int isF = targetC->getFinished();
+	system("cls");
+	if (isF)
+	{
+		cout << "µ±«∞±»»¸“—Ω· ¯£¨Œﬁ∑®Ω¯»Îœ¬“ªΩ◊∂Œ°£" << endl;
+		cout << "±»»¸¥¥Ω® ß∞‹°£" << endl;
+	}
+	else
+	{
+		targetC->setFinished(1);
+		string newName;
+		cout << "«Î ‰»Î–¬±»»¸µƒ√˚≥∆£∫";
+		cin >> newName;
+		while (1)
+		{
+			bool flag = true;
+			for (int i = 1;i <= contestCount;i++)
+			{
+				string tmpName = c.getNode(i)->getContestName();
+				if (i != selectKey && newName == tmpName)
+				{
+					cout << "“—¥Ê‘⁄Õ¨√˚±»»¸£¨«Î÷ÿ–¬ ‰»Î£∫" << endl;
+					flag = false;
+				}
+			}
+			if (flag) {break;}
+		}
+		int newCount = targetC->getContestantCount() / 2;
+		contest* newC = new contest(newName, newCount, 0);
+		myList<singer>& sL=targetC->contestantList;
+		checkPromoted(sL, targetC->getContestantCount());
+		for (int i = 1;i <= targetC->getContestantCount();i++)
+		{
+			singer* tmp = targetC->contestantList.getNode(i);
+			if (tmp->getPromoted())
+			{
+				singer* newTmp = new singer;
+				newTmp->setNumber(tmp->getNumber());
+				newTmp->setName(tmp->getName());
+				newC->contestantList.addNode(*newTmp);
+			}
+
+		}
+		c.addNode(*newC);
+		contestCount++;
+	}
 	cout << "¥¥Ω®≥…π¶!"<<endl;
 	return;
 }
@@ -247,11 +324,12 @@ void admin::addSingerData(contest* c)
 		cin >> s;
 		tmp->setScore(i, s);
 	}
-	tmp->countScores();
 	int newVote;
 	cout << "«Î ‰»Î–¬‘ˆ∏Ë ÷µƒπ€÷⁄Õ∂∆± ˝£∫";
 	cin >> newVote;
 	tmp->setVotes(newVote);
+	
+	tmp->countScores();
 	c->setContestantCount( c->getContestantCount() + 1 );
 	sL.addNode(*tmp);
 	system("cls");
@@ -287,26 +365,42 @@ void admin::modifySingerData(contest* c)
 	else
 	{
 		singer& mS = *sL.getNode(modifyKey);
-		cout << "∏Ë ÷‘≠±‡∫≈Œ™£∫[ " << mS.getNumber()<<" ]  ƒ˙œÎ–ﬁ∏ƒŒ™£∫";
-		string newNum;
-		cin >> newNum;
-		mS.setNumber(newNum);
-		cout << "∏Ë ÷‘≠–’√˚Œ™£∫[ " << mS.getName() << " ]  ƒ˙œÎ–ﬁ∏ƒŒ™£∫";
-		string newName;
-		cin >> newName;
-		mS.setName(newName);
-		for (int i = 1;i <= 10;i++)
+		char c;
+		cout << "«ÎŒ ƒ˙“™–ﬁ∏ƒ∏Ë ÷±‡∫≈”Î–’√˚¬( ‰»Îy±Ì æ»∑∂®):";
+		cin >> c;
+		if (c == 'y')
 		{
-			cout << "∆¿ŒØ" << i << "µƒ‘≠¥Ú∑÷Œ™£∫[ " << mS.getScore(i) << " ]  ƒ˙œÎ–ﬁ∏ƒŒ™£∫";
-			double newS;
-			cin >> newS;
-			mS.setScore(i-1, newS);
+			cout << "∏Ë ÷‘≠±‡∫≈Œ™£∫[ " << mS.getNumber()<<" ]  ƒ˙œÎ–ﬁ∏ƒŒ™£∫";
+			string newNum;
+			cin >> newNum;
+			mS.setNumber(newNum);
+			cout << "∏Ë ÷‘≠–’√˚Œ™£∫[ " << mS.getName() << " ]  ƒ˙œÎ–ﬁ∏ƒŒ™£∫";
+			string newName;
+			cin >> newName;
+			mS.setName(newName);
+		}
+		cout << "«ÎŒ ƒ˙“™–ﬁ∏ƒ∆¿ŒØ¥Ú∑÷¬( ‰»Îy±Ì æ»∑∂®):";
+		cin >> c;
+		if (c == 'y')
+		{
+			for (int i = 1;i <= 10;i++)
+			{
+				cout << "∆¿ŒØ" << i << "µƒ‘≠¥Ú∑÷Œ™£∫[ " << mS.getScore(i) << " ]  ƒ˙œÎ–ﬁ∏ƒŒ™£∫";
+				double newS;
+				cin >> newS;
+				mS.setScore(i-1, newS);
+			}
+		}
+		cout << "«ÎŒ ƒ˙“™–ﬁ∏ƒπ€÷⁄Õ∂∆± ˝¬( ‰»Îy±Ì æ»∑∂®):";
+		cin >> c;
+		if (c == 'y')
+		{
+			cout << "∏Ë ÷µƒ‘≠π€÷⁄Õ∂∆± ˝Œ™£∫[ " << mS.getVotes() << " ]  ƒ˙œÎ–ﬁ∏ƒŒ™£∫";
+			int newVote;
+			cin >> newVote;
+			mS.setVotes(newVote);
 		}
 		mS.countScores();
-		cout << "∏Ë ÷µƒ‘≠π€÷⁄Õ∂∆± ˝Œ™£∫[ " << mS.getVotes() << " ]  ƒ˙œÎ–ﬁ∏ƒŒ™£∫";
-		int newVote;
-		cin >> newVote;
-		mS.setVotes(newVote);
 		system("cls");
 		cout << "∏Ë ÷–≈œ¢“—–ﬁ∏ƒ≥…π¶£°" << endl;
 	}

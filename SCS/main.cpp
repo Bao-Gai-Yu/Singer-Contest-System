@@ -12,6 +12,7 @@ void writeData(int&, myList<contest>&);
 
 int main()
 {
+	cout << fixed;
 	myList<contest> contestList;//创建存储不同场次的比赛的链表
 	int contestCount;//存储比赛场次数
 	readData(contestCount, contestList);//文件读入数据
@@ -133,23 +134,30 @@ int main()
 						else if (inContestChoice == '2')//为选手投票
 						{
 							system("cls");
-							for (int i = 1;i <= singerNum;i++)
+							if (currentContest->getFinished())
 							{
-								singer* tmp = currentSingerList->getNode(i);
-								cout << "->" << i << endl;
-								cout << "\t编号：" <<tmp->getNumber()<< "\t姓名：" <<tmp->getName()<< endl;
-								cout << "\t\t当前得票数：" << tmp->getVotes() << endl;
-								cout << endl;
+								cout << "当前比赛已结束，无法进行投票！" << endl;
 							}
-							int voteChoose;
-							cout << "请输入您想要投票的选手前的序号（非选手编号！）:";
-							cin >> voteChoose;
-							while (voteChoose<1 || voteChoose>singerNum)
+							else 
 							{
-								cout << "输入错误，请重新输入：";
+								for (int i = 1;i <= singerNum;i++)
+								{
+									singer* tmp = currentSingerList->getNode(i);
+									cout << "->" << i << endl;
+									cout << "\t编号：" <<tmp->getNumber()<< "\t姓名：" <<tmp->getName()<< endl;
+									cout << "\t\t当前得票数：" << tmp->getVotes() << endl;
+									cout << endl;
+								}
+								int voteChoose;
+								cout << "请输入您想要投票的选手前的序号（非选手编号！）:";
 								cin >> voteChoose;
+								while (voteChoose<1 || voteChoose>singerNum)
+								{
+									cout << "输入错误，请重新输入：";
+									cin >> voteChoose;
+								}
+								currentUser.voteSinger(contestChoice, currentSingerList->getNode(voteChoose));
 							}
-							currentUser.voteSinger(contestChoice, currentSingerList->getNode(voteChoose));
 						}
 						else if (inContestChoice == '3')//返回上一级
 						{
@@ -326,9 +334,9 @@ void readData(int& contestCount,myList<contest>& contestList)
 	for (int i = 0;i < contestCount;i++)
 	{
 		string cName;
-		int singerCnt;
-		Input >> cName >> singerCnt;		//读入每场比赛的信息（比赛名称，歌手数量）
-		contest* contestObj = new contest(cName, singerCnt);
+		int singerCnt,cFinished;
+		Input >> cName >> singerCnt>>cFinished;		//读入每场比赛的信息（比赛名称，歌手数量）
+		contest* contestObj = new contest(cName, singerCnt,cFinished);
 		contestObj->readContestantList(cName);		//读入该场次的参赛选手信息
 		contestList.addNode(*contestObj);
 	}

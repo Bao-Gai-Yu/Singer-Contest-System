@@ -153,6 +153,10 @@
     <ClInclude Include="singer.h" />
     <ClInclude Include="user_class.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\x64\Release\Data\contestData.dat" />
+    <None Include="..\x64\Release\Data\SingerLists\工地好声音.dat" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

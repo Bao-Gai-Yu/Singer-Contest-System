@@ -9,7 +9,7 @@ singer::singer()
 	prev = NULL;
 	next = NULL;
 	number = "Nan";
-	name ="Nan";
+	name = "Nan";
 	for (int i = 0;i < 10;i++)
 		score[i] = 0;
 	maxScore = 0;
@@ -17,6 +17,7 @@ singer::singer()
 	totalScore = 0;
 	averageScore = 0;
 	votes = 0;
+	isPromtoted = 0;
 }
 
 void singer::setNumber(string numS)
@@ -51,6 +52,7 @@ void singer::countScores()
 			minScore = score[i];
 	}
 	averageScore = (totalScore - maxScore - minScore) / 8;
+	finalScore = (totalScore - maxScore - minScore + votes / 10.0) / 9;
 	return;
 }
 
@@ -60,8 +62,15 @@ void singer::setVotes(int v)
 	return;
 }
 
+void singer::setPromoted(int f)
+{
+	isPromtoted = f;
+	return;
+}
+
 void singer::display()
 {
+	cout << setprecision(1);
 	cout << "\t±àºÅ£º" << number <<endl;
 	cout << endl;
 	cout << "\tÐÕÃû£º" << name << endl;
@@ -71,10 +80,15 @@ void singer::display()
 	for (int i = 0;i < 10;i++)
 		cout << "\tÆÀÎ¯" <<setw(2)<< i + 1 << "µÄ´ò·ÖÎª£º\t\t" << score[i] << endl;
 	cout << endl;
-	cout << "\t×ÜµÃ·Ö£º" << totalScore << "\tÆ½¾ù·Ö£º" << averageScore << endl;
+	cout << "\tÆÀÎ¯×ÜµÃ·Ö£º" << totalScore << "\tÆÀÎ¯Æ½¾ù·Ö£º" << setprecision(2) << averageScore << endl;
 	cout << endl;
-	cout << "\tÓÃ»§Í¶Æ±Êý£º\t" << votes << endl;
-
+	cout << "\tÓÃ»§Í¶Æ±Êý£º\t" << setprecision(0) << votes << endl;
+	cout << "\t×ÛºÏµÃ·Ö£º\t" << setprecision(3) << finalScore << endl;
+	cout << "\t½ú¼¶×´Ì¬£º\t";
+	if (isPromtoted)
+		cout << "ÊÇ" << endl;
+	else
+		cout << "·ñ" << endl;
 	return;
 }
 
@@ -105,6 +119,8 @@ double singer::getScore(int i)const
 			return averageScore;
 		case 15:
 			return votes;
+		case 16:
+			return finalScore;
 		}
 	}
 }
@@ -112,6 +128,11 @@ double singer::getScore(int i)const
 int singer::getVotes() const 
 {
 	return votes;
+}
+
+int singer::getPromoted() const
+{
+	return isPromtoted;
 }
 
 ofstream& operator <<(ofstream& OUT, const singer& s)//½«¸èÊÖÐÅÏ¢Ð´ÈëÎÄ¼þµÄÔËËã·ûÖØÔØ
@@ -123,7 +144,7 @@ ofstream& operator <<(ofstream& OUT, const singer& s)//½«¸èÊÖÐÅÏ¢Ð´ÈëÎÄ¼þµÄÔËËã·
 			OUT << ' ';
 		OUT << s.score[i];
 	}
-	OUT << endl << s.votes << endl;
+	OUT << endl << s.votes << ' ' << s.isPromtoted << endl;
 	return OUT;
 }
 
@@ -144,6 +165,8 @@ double& singer::operator[](int i)
 			return averageScore;
 		case 15:
 			return votes;
+		case 16:
+			return finalScore;
 		}
 	}
 }

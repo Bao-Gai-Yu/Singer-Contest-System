@@ -1,14 +1,16 @@
 #include"contest.h"
 #include<iostream>
+#include<iomanip>
 #include<fstream>
 using namespace std;
 
-contest::contest(string cName="Nan", int cnt=0) :contestantList()
+contest::contest(string cName="Nan", int cnt=0,int cFinished=0) :contestantList()
 {
 	prev = NULL;
 	next = NULL;
 	contestName = cName;
 	contestantCount = cnt;
+	isFinished = cFinished;
 }
 
 void contest::readContestantList(string cName)//读入一场比赛的歌手数据
@@ -28,10 +30,15 @@ void contest::readContestantList(string cName)//读入一场比赛的歌手数据
 			singerInput >> tmpSco;
 			tmpSinger->setScore(i, tmpSco);
 		}
-		tmpSinger->countScores();			//计算选手的最高分，最低分，总分，平均分。
 		int tmpVote;
 		singerInput >> tmpVote;				//读入选手获得的观众投票数
 		tmpSinger->setVotes(tmpVote);
+
+		tmpSinger->countScores();			//计算选手的最高分，最低分，总分，平均分，以及综合得分。
+		
+		int tmpPromoted;
+		singerInput >> tmpPromoted;
+		tmpSinger->setPromoted(tmpPromoted);
 		contestantList.addNode	(*tmpSinger);
 	}
 	singerInput.close();
@@ -46,7 +53,11 @@ void contest::printContestantList()
 
 void contest::display()
 {
-	cout << "\t" << contestName << "\t\t\t参赛人数：" << contestantCount << endl;
+	cout << setw(29) << contestName << setw(23) << "比赛状态：";
+	if (isFinished)
+		cout << "已结束！" << endl;
+	else
+		cout << "进行中！" << endl;
 }
 
 string contest::getContestName()
@@ -65,14 +76,25 @@ int contest::getContestantCount()
 	return contestantCount;
 }
 
+int contest::getFinished()
+{
+	return isFinished;
+}
+
 void contest::setContestantCount(int newCount)
 {
 	contestantCount = newCount;
 	return;
 }
 
+void contest::setFinished(int newF)
+{
+	isFinished = newF;
+	return;
+}
+
 ofstream& operator <<(ofstream& OUT,contest& c)	//将比赛信息写入文件的运算符重载
 {
-	OUT << c.contestName << " " << c.contestantCount;
+	OUT << c.contestName << ' ' << c.contestantCount << ' ' << c.isFinished;
 	return OUT;
 }
